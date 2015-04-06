@@ -7,12 +7,23 @@ Essentially a thin wrapper around the excellent `jsonpath` library. The [JSONPat
 ## Usage
 
 	var locator = require('json-locator');
-    
-	locator.transform('colors[type="subtractive"][red<100]'); 
-	// expected colors[?(@.type="subtractive" && @.red<100)]
-	
-	locator.query(data, expr);
+    var data = {
+        colors: [
+            { type: 'additive', name: 'red', red: 255, green: 0, blue: 0 },
+            { type: 'additive', name: 'green', red: 0, green: 255, blue: 0 },
+            { type: 'additive', name: 'blue', red: 0, green: 0, blue: 255 },
+            { type: 'subtractive', name: 'cyan', red: 0, green: 255, blue: 255 },
+            { type: 'subtractive', name: 'magenta', red: 255, green: 0, blue: 255 },
+            { type: 'subtractive', name: 'yellow', red: 255, green: 255, blue: 0 },
+            { type: 'subtractive', name: 'black', red: 0, green: 0, blue: 0 }
+        ]
+    };
 
+	locator.transform('colors[type="subtractive"][red<100]'); 
+	// expected colors[?(@.type=="subtractive" && @.red<100)]
+	
+	locator.query(data, 'colors[type="subtractive"][red<100]');
+    // expected [ { ... name: 'cyan' ...}, { ... name: 'black' ...} ]
 
 ## Motivation
 

@@ -126,8 +126,8 @@ describe('json-locator', function () {
 		};
 
 		var expectations = [
-			{ 
-				given: 'inputs[type="dropdown"][data.hasPricing].data.options[*].price', 
+			{
+				given: 'inputs[type="dropdown"][data.hasPricing].data.options[*].price',
 				expected: 'inputs[?(@.type=="dropdown" && @.data.hasPricing)].data.options[*].price'
 			}
 		];
@@ -139,6 +139,38 @@ describe('json-locator', function () {
 				console.log(locator.query(data, expectation.given));
 			});
 		});
+
+	});
+
+	describe('as per readme', function() {
+
+		var data = {
+			colors: [
+				{ type: 'additive', name: 'red', red: 255, green: 0, blue: 0 },
+				{ type: 'additive', name: 'green', red: 0, green: 255, blue: 0 },
+				{ type: 'additive', name: 'blue', red: 0, green: 0, blue: 255 },
+				{ type: 'subtractive', name: 'cyan', red: 0, green: 255, blue: 255 },
+				{ type: 'subtractive', name: 'magenta', red: 255, green: 0, blue: 255 },
+				{ type: 'subtractive', name: 'yellow', red: 255, green: 255, blue: 0 },
+				{ type: 'subtractive', name: 'black', red: 0, green: 0, blue: 0 }
+			]
+		};
+
+		var expectations = [
+			{
+				given: 'colors[type="subtractive"][red<100]',
+				expected: 'colors[?(@.type=="subtractive" && @.red<100)]'
+			}
+		];
+
+		expectations.forEach(function (expectation) {
+			it ('should transform '+expectation.given+' to '+expectation.expected, function() {
+				assert.equal(locator.transform(expectation.given), expectation.expected);
+				assert(locator.query(data, expectation.given), jsonpath.query(data, expectation.expected));
+				console.log(locator.query(data, expectation.given));
+			});
+		});
+
 
 	});
 
